@@ -1,0 +1,3 @@
+@echo off
+echo Launching ChatBuddy Web Server...
+python app.py

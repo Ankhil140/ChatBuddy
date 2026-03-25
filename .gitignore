@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+env/
+venv/
+.venv/
+.env
+
+# Models & Bulky weights
+models/
+huggingface/
+.cache/
+*.bin
+*.pt
+*.onnx
+
+# Data & History
+chat_history.json
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Chat Buddy Pro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@700&display=swap" rel="stylesheet">
+</head>
+<body class="login-body">
+    <div class="glass-box login-card">
+        <h1>WELCOME BACK</h1>
+        <p>Enter your credentials to access your brain</p>
+        
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+        </div>
+        
+        <p id="error-msg" class="error"></p>
+        
+        <button onclick="handleLogin()" class="btn-primary">LOGIN</button>
+        <a href="#" class="forgot-link" onclick="showHint()">Forgot Password?</a>
+    </div>
+
+    <script>
+        async function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                errorMsg.innerText = "Invalid credentials. Try again.";
+            }
+        }
+
+        function showHint() {
+            document.getElementById('username').value = "chatbuddy";
+            document.getElementById('password').value = "chatbuddy@123";
+            document.getElementById('error-msg').innerText = "Hint: Access granted.";
+            document.getElementById('error-msg').style.color = "var(--accent)";
+        }
+    </script>
+</body>
+</html>

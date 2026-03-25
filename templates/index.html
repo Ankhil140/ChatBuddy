@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Buddy Pro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="new-chat-container">
+            <button onclick="startNewChat()" class="btn-primary">+ New Chat</button>
+        </div>
+        <div class="history-list" id="history-list">
+            <!-- Sessions will be loaded here -->
+        </div>
+    </aside>
+
+    <main class="main-chat">
+        <header class="header">
+            <h1>CHAT BUDDY</h1>
+            <div id="status" style="color: #E5C07B; font-family: 'Consolas', monospace;">BRAIN READY</div>
+        </header>
+
+        <div class="messages-container" id="messages">
+            <!-- Messages go here -->
+        </div>
+
+        <div class="footer">
+            <div id="typing-status" class="status_label"></div>
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="Ask me anything..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()" class="send-btn">✦</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
