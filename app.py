@@ -16,7 +16,8 @@ try:
     from transformers import pipeline
     import torch
     TRANSFORMERS_AVAILABLE = True
-except ImportError:
+except (ImportError, RuntimeError):
+    # RuntimeError can happen if torch is partially installed or lacks dependencies on serverless
     TRANSFORMERS_AVAILABLE = False
 
 app = Flask(__name__)

@@ -1,3 +1,7 @@
+transformers
+torch
+accelerate
+customtkinter
 flask
 flask-cors
 flask-sqlalchemy
