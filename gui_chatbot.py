@@ -164,12 +164,7 @@ class ChatApp(ctk.CTk):
         
         ctk.CTkButton(box, text="Login", fg_color=ACCENT, hover_color="#B58654", 
                       width=250, height=45, corner_radius=10, font=("Inter", 14, "bold"),
-                      command=self.attempt_login).pack(pady=20)
-        
-        forgot_btn = ctk.CTkButton(box, text="Forgot Password?", fg_color="transparent", 
-                                   text_color=TEXT_SECONDARY, hover=False, font=("Inter", 12),
-                                   command=self.show_password_hint)
-        forgot_btn.pack(pady=(0, 20))
+                      command=self.attempt_login).pack(pady=(20, 40))
 
     def attempt_login(self):
         username = self.user_entry.get()
@@ -180,10 +175,6 @@ class ChatApp(ctk.CTk):
             self.update_status("READY", "#98C379")
         else:
             self.login_err_label.configure(text="Invalid credentials. Try again.")
-
-    def show_password_hint(self):
-        hint = f"Hint: {self.config['username']} / {self.config['password']}"
-        self.login_err_label.configure(text=hint, text_color=ACCENT)
 
     def show_settings(self):
         self.settings_overlay = ctk.CTkFrame(self, fg_color=BG_MAIN)
