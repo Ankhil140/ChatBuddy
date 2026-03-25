@@ -25,6 +25,7 @@ CORS(app)
 app.secret_key = "supersecretkeyforchatbuddy"
 
 HISTORY_FILE = "chat_history.json"
+CONFIG_FILE = "config.json"
 MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
 
 # Global AI Pipeline (Lazy Load)
@@ -62,6 +63,18 @@ def load_ai():
 threading.Thread(target=load_ai, daemon=True).start()
 
 # --- HELPERS ---
+def get_config():
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, "r") as f:
+                return json.load(f)
+        except: pass
+    return {"username": "chatbuddy", "password": "chatbuddy@123"}
+
+def save_config(config):
+    with open(CONFIG_FILE, "w") as f:
+        json.dump(config, f, indent=4)
+
 def get_history():
     if os.path.exists(HISTORY_FILE):
         try:
@@ -87,7 +100,8 @@ def login():
     username = data.get('username')
     password = data.get('password')
     
-    if username == "chatbuddy" and password == "chatbuddy@123":
+    config = get_config()
+    if username == config["username"] and password == config["password"]:
         session['user'] = username
         return jsonify({"success": True})
     return jsonify({"success": False, "message": "Invalid credentials"}), 401
@@ -100,6 +114,17 @@ def logout():
 @app.route('/api/history', methods=['GET'])
 def fetch_history():
     return jsonify(get_history())
+
+@app.route('/api/settings', methods=['POST'])
+def update_settings():
+    if 'user' not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+    data = request.json
+    config = get_config()
+    config["username"] = data.get('username', config["username"])
+    config["password"] = data.get('password', config["password"])
+    save_config(config)
+    return jsonify({"success": True})
 
 @app.route('/api/chat', methods=['POST'])
 def chat():

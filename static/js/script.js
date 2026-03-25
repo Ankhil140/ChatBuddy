@@ -97,5 +97,30 @@ function handleKeyPress(e) {
     if (e.key === 'Enter') sendMessage();
 }
 
+function toggleSettings() {
+    const modal = document.getElementById('settings-modal');
+    modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+    document.getElementById('settings-msg').innerText = "";
+}
+
+async function saveSettings() {
+    const username = document.getElementById('new-username').value;
+    const password = document.getElementById('new-password').value;
+    
+    if (!username && !password) return toggleSettings();
+
+    const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    });
+
+    if (res.ok) {
+        document.getElementById('settings-msg').innerText = "Changes saved!";
+        document.getElementById('settings-msg').style.color = "var(--accent)";
+        setTimeout(toggleSettings, 1000);
+    }
+}
+
 // Start
 loadInitialData();

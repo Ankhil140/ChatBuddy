@@ -17,6 +17,7 @@ except ImportError:
 
 # --- CONFIG & COLORS ---
 HISTORY_FILE = "chat_history.json"
+CONFIG_FILE = "config.json"
 RULES = [
     (r"hello|hi|hey|greetings", ["Hello there!", "Hi! I'm ChatBuddy. How can I help you today?", "Greetings!"]),
     (r"how are you", ["I'm doing great, feeling more premium than ever!", "All systems go! Ready to chat."]),
@@ -45,6 +46,7 @@ class ChatApp(ctk.CTk):
         self.configure(fg_color=BG_MAIN)
 
         # Data State
+        self.config = self.load_config()
         self.sessions = self.load_history()
         self.current_session_id: str = ""
         self.model_loaded = False
@@ -72,6 +74,12 @@ class ChatApp(ctk.CTk):
         self.history_frame = ctk.CTkScrollableFrame(self.sidebar, fg_color="transparent")
         self.history_frame.pack(fill="both", expand=True, padx=10, pady=10)
         self.history_buttons = {}
+
+        # Settings Button at bottom of sidebar
+        self.settings_btn = ctk.CTkButton(self.sidebar, text="⚙ Settings", fg_color="transparent", 
+                                         text_color=TEXT_SECONDARY, hover_color="#23262D",
+                                         font=("Inter", 12), command=self.show_settings)
+        self.settings_btn.pack(side="bottom", pady=15, padx=20, fill="x")
 
         # --- MAIN CHAT AREA ---
         self.main_container = ctk.CTkFrame(self, fg_color="transparent")
@@ -167,16 +175,67 @@ class ChatApp(ctk.CTk):
         username = self.user_entry.get()
         password = self.pass_entry.get()
         
-        if username == "chatbuddy" and password == "chatbuddy@123":
+        if username == self.config["username"] and password == self.config["password"]:
             self.login_overlay.destroy()
             self.update_status("READY", "#98C379")
         else:
             self.login_err_label.configure(text="Invalid credentials. Try again.")
 
     def show_password_hint(self):
-        self.login_err_label.configure(text="Hint: chatbuddy / chatbuddy@123", text_color=ACCENT)
+        hint = f"Hint: {self.config['username']} / {self.config['password']}"
+        self.login_err_label.configure(text=hint, text_color=ACCENT)
+
+    def show_settings(self):
+        self.settings_overlay = ctk.CTkFrame(self, fg_color=BG_MAIN)
+        self.settings_overlay.place(relx=0, rely=0, relwidth=1, relheight=1)
+        
+        box = ctk.CTkFrame(self.settings_overlay, fg_color=BG_SIDEBAR, width=350, height=450, corner_radius=20)
+        box.place(relx=0.5, rely=0.5, anchor="center")
+        
+        ctk.CTkLabel(box, text="SETTINGS", font=("Outfit", 20, "bold"), text_color=ACCENT).pack(pady=(30, 20))
+        
+        ctk.CTkLabel(box, text="Update ChatBuddy Credentials", font=("Inter", 12), text_color=TEXT_SECONDARY).pack(pady=(0, 20))
+        
+        new_user = ctk.CTkEntry(box, placeholder_text=f"Username ({self.config['username']})", width=250, height=40)
+        new_user.pack(pady=10)
+        
+        new_pass = ctk.CTkEntry(box, placeholder_text="New Password", show="*", width=250, height=40)
+        new_pass.pack(pady=10)
+        
+        self.settings_status = ctk.CTkLabel(box, text="", font=("Inter", 11))
+        self.settings_status.pack(pady=5)
+        
+        btn_frame = ctk.CTkFrame(box, fg_color="transparent")
+        btn_frame.pack(pady=20)
+        
+        ctk.CTkButton(btn_frame, text="Cancel", fg_color="transparent", border_width=1, border_color=TEXT_SECONDARY,
+                      width=110, height=40, command=self.settings_overlay.destroy).pack(side="left", padx=10)
+                      
+        def save_changes():
+            u = new_user.get().strip() or self.config["username"]
+            p = new_pass.get().strip() or self.config["password"]
+            self.config["username"] = u
+            self.config["password"] = p
+            self.save_config()
+            self.settings_status.configure(text="Changes Saved!", text_color="#98C379")
+            self.after(1000, self.settings_overlay.destroy)
+
+        ctk.CTkButton(btn_frame, text="Save", fg_color=ACCENT, hover_color="#B58654",
+                      width=110, height=40, command=save_changes).pack(side="left", padx=10)
 
     # --- PERSISTENCE ---
+    def load_config(self):
+        if os.path.exists(CONFIG_FILE):
+            try:
+                with open(CONFIG_FILE, "r") as f:
+                    return json.load(f)
+            except: pass
+        return {"username": "chatbuddy", "password": "chatbuddy@123"}
+
+    def save_config(self):
+        with open(CONFIG_FILE, "w") as f:
+            json.dump(self.config, f, indent=4)
+
     def load_history(self):
         if os.path.exists(HISTORY_FILE):
             try:

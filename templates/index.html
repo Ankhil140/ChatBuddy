@@ -20,7 +20,10 @@
     <main class="main-chat">
         <header class="header">
             <h1>CHAT BUDDY</h1>
-            <div id="status" style="color: #E5C07B; font-family: 'Consolas', monospace;">BRAIN READY</div>
+            <div class="header-right">
+                <div id="status" style="color: #E5C07B; font-family: 'Consolas', monospace; margin-right: 20px;">BRAIN READY</div>
+                <button onclick="toggleSettings()" class="icon-btn" title="Settings">⚙</button>
+            </div>
         </header>
 
         <div class="messages-container" id="messages">
@@ -35,6 +38,23 @@
             </div>
         </div>
     </main>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="glass-box modal-content">
+            <h2>SETTINGS</h2>
+            <p>Update your credentials</p>
+            <div class="input-group">
+                <input type="text" id="new-username" placeholder="New Username">
+                <input type="password" id="new-password" placeholder="New Password">
+            </div>
+            <p id="settings-msg" class="status-label"></p>
+            <div class="modal-btns">
+                <button onclick="toggleSettings()" class="btn-secondary">Cancel</button>
+                <button onclick="saveSettings()" class="btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
