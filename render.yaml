@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: chatbuddy-pro
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.10.0
