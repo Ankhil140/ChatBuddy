@@ -25,14 +25,14 @@ ChatBuddy Pro is a premium, local-first AI chatbot application that supports **D
 
 ## 🚀 Getting Started
 
-1. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. **Setup Gemini (Optional for Cloud)**:
-   - Add `GOOGLE_API_KEY` to your environment variables for web/cloud features.
-3. **Run**:
-   - Execute `launch_app.bat` to start the desktop version.
+### 1. For Desktop / Local Web
+If you want to run the AI model on your own hardware:
+```bash
+pip install -r requirements-desktop.txt
+```
+
+### 2. For Cloud Deployment (Vercel/Render)
+The cloud versions use the Gemini API to stay lightweight and fast. No action is needed as they automatically use the minimal `requirements.txt`.
 
 ## 📄 License
 MIT License. Feel free to use and modify!
